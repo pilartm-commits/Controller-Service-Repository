@@ -4,7 +4,7 @@ namespace Controller_Service_Repository.Services.Implementations
 {
     public class ProductService
     {
-        private ProductRepository repository = new ProductRepository();
+        private ProductRepository repository = new ProductRepository( );
 
     }
 }
