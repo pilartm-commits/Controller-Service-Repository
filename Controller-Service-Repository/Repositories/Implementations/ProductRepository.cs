@@ -1,8 +1,9 @@
 ﻿using Controller_Service_Repository.Entities;
+using Controller_Service_Repository.Repositories.Interfaces;
 
 namespace Controller_Service_Repository.Repositories.Implementations
 {
-    public class ProductRepository
+    public class ProductRepository : IProductRepository
     {
         private static List<Product> _products = new()
         {
@@ -27,6 +28,7 @@ namespace Controller_Service_Repository.Repositories.Implementations
         }
         public void AddProduct(Product product)
         {
+            product.Id = _products.Any() ? _products.Max(p => p.Id) + 1 : 1;
             _products.Add(product);
         }
         public void UpdateProduct(Product product)
