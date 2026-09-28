@@ -1,6 +1,8 @@
-﻿namespace Controller_Service_Repository.Repositories.Interfaces
+﻿
+namespace Controller_Service_Repository.Repositories.Interfaces
 {
     public interface IProductRepository
     {
+        IEnumerable<object> GetAllProducts();
     }
 }
