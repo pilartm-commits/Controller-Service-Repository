@@ -10,5 +10,7 @@ namespace Controller_Service_Repository.Services.Interfaces
         ProductForReadDto CreateProduct(ProductForCreateDto dto);
         bool UpdateProduct(int id, ProductForUpdateDto dto);
         bool DeleteProduct(int id);
+        List<ProductForReadDto> SearchProductsByName(string name);
+        public ProductStatsDto GetStats();
     }
 }

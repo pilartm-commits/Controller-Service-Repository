@@ -9,7 +9,7 @@ namespace Controller_Service_Repository.Services.Implementations
 {
     public class ProductService : IProductService  
     {
-        private readonly ProductRepository repository = new ProductRepository();
+        private readonly ProductRepository _repository = new ProductRepository();
 
         public ProductForReadDto CreateProduct(ProductForCreateDto dto)
         {
@@ -18,7 +18,7 @@ namespace Controller_Service_Repository.Services.Implementations
                 Name = dto.Name,
                 Price = dto.Price
             };
-            repository.AddProduct(newProduct);
+            _repository.AddProduct(newProduct);
 
             // Retorna el DTO de lectura correspondiente
             return new ProductForReadDto
@@ -31,16 +31,16 @@ namespace Controller_Service_Repository.Services.Implementations
 
         public bool DeleteProduct(int id)
         {
-            var existingProduct = repository.GetProductById(id);
+            var existingProduct = _repository.GetProductById(id);
             if (existingProduct == null) return false;
 
-            repository.DeleteProduct(existingProduct);
+            _repository.DeleteProduct(existingProduct);
             return true;
         }
 
         public List<ProductForReadDto> GetAllProducts()
         {
-            var products = repository.GetAllProducts();
+            var products = _repository.GetAllProducts();
             // Mapeo manual de Entidad -> DTO
             return products.Select(p => new ProductForReadDto
             {
@@ -52,7 +52,7 @@ namespace Controller_Service_Repository.Services.Implementations
 
         public ProductForReadDto? GetProductById(int id)
         {
-            var product = repository.GetProductById(id);
+            var product = _repository.GetProductById(id);
             if (product == null) return null;
 
             return new ProductForReadDto
@@ -65,14 +65,44 @@ namespace Controller_Service_Repository.Services.Implementations
 
         public bool UpdateProduct(int id, ProductForUpdateDto dto)
         {
-            var existingProduct = repository.GetProductById(id);
+            var existingProduct = _repository.GetProductById(id);
             if (existingProduct == null) return false;
 
             existingProduct.Name = dto.Name;
             existingProduct.Price = dto.Price;
 
-            repository.UpdateProduct(existingProduct);
+            _repository.UpdateProduct(existingProduct);
             return true;
+        }
+        public List<ProductForReadDto> SearchProductsByName (string name)
+        {
+            var products = _repository.SearchProductsByName(name);
+            return products.Select(p => new ProductForReadDto
+            {
+                Id = p.Id,
+                Name = p.Name,
+                Price = p.Price
+            }).ToList();
+        }
+        public ProductStatsDto GetStats()
+        {
+            var products = _repository.GetAllProducts();
+            if (!products.Any())
+            {
+                return new ProductStatsDto
+                {
+                    Total = 0,
+                    AveragePrice = 0,
+                    MostExpensiveName = "N / A"
+                };
+            }
+            return new ProductStatsDto
+            {
+                Total = products.Count(),
+                AveragePrice = products.Average(p => p.Price),
+                MostExpensiveName = products.OrderByDescending(p => p.Price).First().Name
+            };
+
         }
     }
 }

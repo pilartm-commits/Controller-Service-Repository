@@ -1,4 +1,5 @@
 ﻿using Controller_Service_Repository.Entities;
+using Controller_Service_Repository.Models.DTOs.Responses;
 using Controller_Service_Repository.Repositories.Interfaces;
 
 namespace Controller_Service_Repository.Repositories.Implementations
@@ -39,6 +40,12 @@ namespace Controller_Service_Repository.Repositories.Implementations
         public void DeleteProduct(Product product)
         {
             _products.Remove(product);
+        }
+        public List<Product> SearchProductsByName(string name)
+        {
+            return _products
+                .Where(p => p.Name.Contains(name, StringComparison.OrdinalIgnoreCase))
+                .ToList();
         }
     }
 }

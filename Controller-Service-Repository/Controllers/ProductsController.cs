@@ -56,5 +56,17 @@ namespace Controller_Service_Repository.Controllers
             }
             return NoContent(); 
         }
+        [HttpGet("search")]
+        public ActionResult<List<ProductForReadDto>> Search([FromQuery] string name)
+        {
+            var results = _productService.SearchProductsByName(name ?? string.Empty);
+            return Ok(results);
+        }
+        [HttpGet("stats")]
+        public ActionResult<ProductStatsDto> GetStats()
+        {
+            var stats = _productService.GetStats();
+            return Ok(stats);
+        }
     }
 }
