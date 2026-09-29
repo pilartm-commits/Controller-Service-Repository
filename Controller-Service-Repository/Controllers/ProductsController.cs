@@ -33,8 +33,16 @@ namespace Controller_Service_Repository.Controllers
         [HttpPost]
         public IActionResult Create([FromBody] ProductForCreateDto product)
         {
-            var newProduct = _productService.CreateProduct(product);
-            return CreatedAtAction(nameof(GetById), new { id = newProduct.Id }, newProduct);
+            try
+            {
+                 var newProduct = _productService.CreateProduct(product);
+                 return CreatedAtAction(nameof(GetById), new { id = newProduct.Id }, newProduct);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return Conflict(new { message = ex.Message });
+            }
+           
         }
         [HttpPut("{id}")]
         public IActionResult Update(int id, [FromBody] ProductForUpdateDto product)
@@ -57,13 +65,13 @@ namespace Controller_Service_Repository.Controllers
             return NoContent(); 
         }
         [HttpGet("search")]
-        public ActionResult<List<ProductForReadDto>> Search([FromQuery] string name)
+        public IActionResult Search([FromQuery] string name)
         {
             var results = _productService.SearchProductsByName(name ?? string.Empty);
             return Ok(results);
         }
         [HttpGet("stats")]
-        public ActionResult<ProductStatsDto> GetStats()
+        public IActionResult GetStats()
         {
             var stats = _productService.GetStats();
             return Ok(stats);

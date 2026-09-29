@@ -13,6 +13,13 @@ namespace Controller_Service_Repository.Services.Implementations
 
         public ProductForReadDto CreateProduct(ProductForCreateDto dto)
         {
+            var existingProducts = _repository.GetAllProducts();
+            bool nameExists = existingProducts.Any(p => p.Name == dto.Name);
+            if (nameExists)
+            {
+                throw new InvalidOperationException("Ya existe un producto con ese nombre");
+            }
+
             var newProduct = new Product
             {
                 Name = dto.Name,
