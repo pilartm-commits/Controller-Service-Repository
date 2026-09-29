@@ -9,7 +9,12 @@ namespace Controller_Service_Repository.Services.Implementations
 {
     public class ProductService : IProductService  
     {
-        private readonly ProductRepository _repository = new ProductRepository();
+        private readonly IProductRepository _repository;
+
+        public ProductService(IProductRepository repository)
+        {
+            _repository = repository;
+        }
 
         public ProductForReadDto CreateProduct(ProductForCreateDto dto)
         {
@@ -81,7 +86,7 @@ namespace Controller_Service_Repository.Services.Implementations
             _repository.UpdateProduct(existingProduct);
             return true;
         }
-        public List<ProductForReadDto> SearchProductsByName (string name)
+        public List<ProductForReadDto> SearchProductsByName(string name)
         {
             var products = _repository.SearchProductsByName(name);
             return products.Select(p => new ProductForReadDto

@@ -1,6 +1,7 @@
 ﻿using Controller_Service_Repository.Models.DTOs.Requests;
 using Controller_Service_Repository.Models.DTOs.Responses;
 using Controller_Service_Repository.Services.Implementations;
+using Controller_Service_Repository.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,12 +11,17 @@ namespace Controller_Service_Repository.Controllers
     [ApiController]
     public class ProductsController : ControllerBase
     {
-        private ProductService _productService = new ProductService();
+        private readonly IProductService _service;
+
+        public ProductsController(IProductService service)
+        {
+            _service = service;
+        }
 
         [HttpGet]
         public IActionResult GetAllProduct()
         {
-            List<ProductForReadDto> productsDto = _productService.GetAllProducts();
+            List<ProductForReadDto> productsDto = _service.GetAllProducts();
 
             return Ok(productsDto);
         }
@@ -23,7 +29,7 @@ namespace Controller_Service_Repository.Controllers
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
-            var product = _productService.GetProductById(id);
+            var product = _service.GetProductById(id);
             if (product == null)
             {
                 return NotFound();
@@ -35,7 +41,7 @@ namespace Controller_Service_Repository.Controllers
         {
             try
             {
-                 var newProduct = _productService.CreateProduct(product);
+                 var newProduct = _service.CreateProduct(product);
                  return CreatedAtAction(nameof(GetById), new { id = newProduct.Id }, newProduct);
             }
             catch (InvalidOperationException ex)
@@ -47,7 +53,7 @@ namespace Controller_Service_Repository.Controllers
         [HttpPut("{id}")]
         public IActionResult Update(int id, [FromBody] ProductForUpdateDto product)
         {
-            var updated = _productService.UpdateProduct(id, product);
+            var updated = _service.UpdateProduct(id, product);
             if(!updated)
             {
                 return NotFound();
@@ -57,7 +63,7 @@ namespace Controller_Service_Repository.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete (int id)
         {
-            var deleted = _productService.DeleteProduct(id);
+            var deleted = _service.DeleteProduct(id);
             if (!deleted)
             {
                 return NotFound();
@@ -67,13 +73,13 @@ namespace Controller_Service_Repository.Controllers
         [HttpGet("search")]
         public IActionResult Search([FromQuery] string name)
         {
-            var results = _productService.SearchProductsByName(name ?? string.Empty);
+            var results = _service.SearchProductsByName(name ?? string.Empty);
             return Ok(results);
         }
         [HttpGet("stats")]
         public IActionResult GetStats()
         {
-            var stats = _productService.GetStats();
+            var stats = _service.GetStats();
             return Ok(stats);
         }
     }

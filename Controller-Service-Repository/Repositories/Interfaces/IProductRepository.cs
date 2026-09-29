@@ -1,14 +1,16 @@
 ﻿
 using Controller_Service_Repository.Entities;
+using Controller_Service_Repository.Models.DTOs.Responses;
 
 namespace Controller_Service_Repository.Repositories.Interfaces
 {
     public interface IProductRepository
     {
         List<Product> GetAllProducts();
-        public Product? GetProductById (int id);
-        public void AddProduct(Product product);
-        public void UpdateProduct(Product product);
-        public void DeleteProduct(Product product); 
+        Product? GetProductById(int id);
+        void AddProduct(Product product);
+        void UpdateProduct(Product product);
+        void DeleteProduct(Product product);
+        List<Product> SearchProductsByName(string name);
     }
 }

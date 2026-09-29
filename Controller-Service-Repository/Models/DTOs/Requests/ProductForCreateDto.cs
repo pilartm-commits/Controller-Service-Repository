@@ -9,7 +9,6 @@ namespace Controller_Service_Repository.Models.DTOs.Requests
         public string Name { get; set; }
         [Required (ErrorMessage = "El precio es requerido")]
         [Range (0.01, double.MaxValue, ErrorMessage = "El precio debe ser mayor a 0")]
-        []
-        public decimal Price { get; set; }
+       public decimal Price { get; set; }
     }
 }
