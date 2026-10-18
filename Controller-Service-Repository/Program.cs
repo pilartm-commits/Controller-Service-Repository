@@ -1,8 +1,10 @@
 
+using Controller_Service_Repository.Data;
 using Controller_Service_Repository.Repositories.Implementations;
 using Controller_Service_Repository.Repositories.Interfaces;
 using Controller_Service_Repository.Services.Implementations;
 using Controller_Service_Repository.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace Controller_Service_Repository
 {
@@ -21,6 +23,8 @@ namespace Controller_Service_Repository
             builder.Services.AddSwaggerGen();
             builder.Services.AddScoped<IProductRepository, ProductRepository>();
             builder.Services.AddScoped<IProductService, ProductService>();
+            builder.Services.AddDbContext <AMBProductosContext> (dbContextOptions => 
+                dbContextOptions.UseSqlite(builder.Configuration["ConnectionStrings:AMBProductosDBConnectionString"]));
 
             var app = builder.Build();
 
