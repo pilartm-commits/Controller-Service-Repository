@@ -1,4 +1,5 @@
-﻿using Controller_Service_Repository.Entities;
+﻿using Controller_Service_Repository.Data;
+using Controller_Service_Repository.Entities;
 using Controller_Service_Repository.Models.DTOs.Responses;
 using Controller_Service_Repository.Repositories.Interfaces;
 
@@ -6,44 +7,39 @@ namespace Controller_Service_Repository.Repositories.Implementations
 {
     public class ProductRepository : IProductRepository
     {
-        private static List<Product> _products = new()
+        private AMBProductosContext _context;
+        public ProductRepository(AMBProductosContext context)
         {
-        new Product { Id = 1, Name = "Mouse inalámbrico", Price = 3999.99m },
-        new Product { Id = 2, Name = "Teclado mecánico", Price = 8299.50m },
-        new Product { Id = 3, Name = "Monitor 24 pulgadas", Price = 52499.00m },
-        new Product { Id = 4, Name = "Notebook Dell Inspiron", Price = 185000.00m },
-        new Product { Id = 5, Name = "Auriculares Bluetooth", Price = 10499.90m },
-        new Product { Id = 6, Name = "Webcam HD", Price = 7999.00m },
-        new Product { Id = 7, Name = "Silla ergonómica", Price = 61200.00m },
-        new Product { Id = 8, Name = "Disco SSD 1TB", Price = 44999.99m },
-        new Product { Id = 9, Name = "Tablet Samsung Galaxy", Price = 93499.00m },
-        new Product { Id = 10, Name = "Impresora multifunción", Price = 73900.00m }
-        };
+            _context = context;
+        }
         public List<Product> GetAllProducts()
         {
-            return _products;
+            return _context.Products.ToList();
         }
         public Product? GetProductById(int id)
         {
-            return _products.FirstOrDefault(x => x.Id == id);
+            return _context.Products.FirstOrDefault(x => x.Id == id);
         }
         public void AddProduct(Product product)
         {
-            product.Id = _products.Any() ? _products.Max(p => p.Id) + 1 : 1;
-            _products.Add(product);
+            product.Id = _context.Products.Any() ? _context.Products.Max(p => p.Id) + 1 : 1;
+            _context.Products.Add(product);
+            _context.SaveChanges();
         }
         public void UpdateProduct(Product product)
         {
-            _products.Add(product);
-            _products.Remove(product);
+            _context.Products.Add(product);
+            _context.Products.Remove(product);
+            _context.SaveChanges();
         }
         public void DeleteProduct(Product product)
         {
-            _products.Remove(product);
+            _context.Products.Remove(product);
+            _context.SaveChanges();
         }
         public List<Product> SearchProductsByName(string name)
         {
-            return _products
+            return _context.Products
                 .Where(p => p.Name.Contains(name, StringComparison.OrdinalIgnoreCase))
                 .ToList();
         }
